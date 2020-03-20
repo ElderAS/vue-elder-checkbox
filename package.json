@@ -1,0 +1,36 @@
+{
+  "name": "vue-elder-checkbox",
+  "version": "1.0.0",
+  "description": "checkbox component for vue-elder",
+  "main": "index.js",
+  "dependencies": {
+    "semantic-release-cli": "^5.2.3"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.1.0"
+  },
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElderAS/vue-elder-checkbox.git"
+  },
+  "keywords": [
+    "vue",
+    "component",
+    "checkbox",
+    "elder"
+  ],
+  "author": "car.jacobsen@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ElderAS/vue-elder-checkbox/issues"
+  },
+  "homepage": "https://github.com/ElderAS/vue-elder-checkbox#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
