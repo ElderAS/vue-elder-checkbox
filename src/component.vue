@@ -23,14 +23,22 @@ export default {
   props: {
     value: [Boolean, Array],
     state: [String, Object],
+    compare: {
+      type: Function,
+      default(a, b) {
+        return a === b
+      },
+    },
     label: String,
   },
   computed: {
+    isChecked() {
+      if (this.isArray)
+        return this.value.find((x) => this.compare(x, this.state)) ? true : false
+      return this.value
+    },
     isArray() {
       return this.value instanceof Array
-    },
-    isChecked() {
-      return this.isArray ? this.value.includes(this.state) : this.value
     },
     isRequired: AttributeBoolean('required'),
     isDisabled: AttributeBoolean('disabled'),
@@ -44,12 +52,12 @@ export default {
   },
   methods: {
     onInput(ev) {
-      if (ev.target.checked) {
+      if (!this.isChecked) {
         this.$emit('input', this.isArray ? [...this.value, this.state] : true)
       } else {
         this.$emit(
           'input',
-          this.isArray ? this.value.filter(r => r !== this.state) : false,
+          this.isArray ? this.value.filter((v) => !this.compare(v, this.state)) : false,
         )
       }
     },
