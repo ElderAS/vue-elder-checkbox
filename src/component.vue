@@ -94,15 +94,15 @@ export default {
 
     &:focus {
       & ~ .elder-checkbox__box {
-        border-color: var(--vue-elder-primary) !important;
+        border-color: GetVariable('primary') !important;
       }
     }
 
     &:disabled {
       & ~ .elder-checkbox__box {
-        background-color: rgba(var(--vue-elder-border-color), 0.3);
+        background-color: rgba(GetVariable('border-color'), 0.3);
         color: rgba(inherit, 0.5);
-        border-color: var(--vue-elder-border-color);
+        border-color: GetVariable('border-color');
       }
 
       & ~ .elder-checkbox__label {
@@ -118,8 +118,8 @@ export default {
 
     height: $size;
     width: $size;
-    border: 1px solid var(--vue-elder-border-color);
-    border-radius: var(--vue-elder-border-radius);
+    border: 1px solid GetVariable('border-color');
+    border-radius: GetVariable('border-radius');
 
     margin-right: 0.5rem;
     flex-shrink: 0;
@@ -134,14 +134,14 @@ export default {
   }
 
   &__required {
-    color: var(--vue-elder-error);
+    color: GetVariable('error');
     margin-left: 4px;
   }
 
   &--checked {
     .elder-checkbox__box {
-      border-color: var(--vue-elder-primary);
-      background-color: lighten(var(--vue-elder-primary), 10%);
+      border-color: GetVariable('primary');
+      background-color: lighten(GetVariable('primary'), 10%);
     }
   }
 }
