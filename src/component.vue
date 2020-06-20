@@ -66,13 +66,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import './main';
+
+:root {
+  @include GenerateVariables();
+}
+
 .elder-checkbox {
   $size: 1.5rem;
-  $primary: #3a9acd !default;
-  $success: #33ca62 !default;
-  $error: #e83b35 !default;
-  $border-color: #eaeaea !default;
-  $border-radius: 3px !default;
 
   display: flex;
   align-items: center;
@@ -93,19 +94,19 @@ export default {
 
     &:focus {
       & ~ .elder-checkbox__box {
-        border-color: $primary !important;
+        border-color: var(--vue-elder-primary) !important;
       }
     }
 
     &:disabled {
       & ~ .elder-checkbox__box {
-        background-color: rgba($border-color, 0.3);
-        color: rgba($dark, 0.5);
-        border-color: $border-color;
+        background-color: rgba(var(--vue-elder-border-color), 0.3);
+        color: rgba(inherit, 0.5);
+        border-color: var(--vue-elder-border-color);
       }
 
       & ~ .elder-checkbox__label {
-        color: rgba($dark, 0.5);
+        color: rgba(inherit, 0.5);
       }
     }
   }
@@ -117,8 +118,8 @@ export default {
 
     height: $size;
     width: $size;
-    border: 1px solid $border-color;
-    border-radius: $border-radius;
+    border: 1px solid var(--vue-elder-border-color);
+    border-radius: var(--vue-elder-border-radius);
 
     margin-right: 0.5rem;
     flex-shrink: 0;
@@ -133,14 +134,14 @@ export default {
   }
 
   &__required {
-    color: $error;
+    color: var(--vue-elder-error);
     margin-left: 4px;
   }
 
   &--checked {
     .elder-checkbox__box {
-      border-color: $primary;
-      background-color: lighten($primary, 10%);
+      border-color: var(--vue-elder-primary);
+      background-color: lighten(var(--vue-elder-primary), 10%);
     }
   }
 }
