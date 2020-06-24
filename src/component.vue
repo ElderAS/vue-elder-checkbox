@@ -71,10 +71,15 @@ export default {
 </script>
 
 <style lang="scss">
-@import './main';
+$variables: (
+  'primary': #3a9acd,
+  'error': #e83b35,
+  'border-radius': 3px,
+  'border-color': #eaeaea,
+);
 
-:root {
-  @include GenerateVariables();
+@function GetVariable($key) {
+  @return var(--vue-elder-#{$key}, map-get($variables, $key));
 }
 
 .elder-checkbox {
