@@ -8,7 +8,7 @@
       v-bind="binding"
     />
     <span class="elder-checkbox__box">
-      <font-awesome-icon v-if="value" :icon="['fas', 'check']" />
+      <FontAwesomeIcon v-if="value" :icon="['fas', 'check']" />
     </span>
     <span class="elder-checkbox__label">
       <slot>{{ label }}</slot>
@@ -19,6 +19,8 @@
 
 <script>
 import { AttributeBoolean } from './utils'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 export default {
   props: {
     value: [Boolean, Array],
@@ -62,6 +64,9 @@ export default {
       }
     },
   },
+  components: {
+    FontAwesomeIcon,
+  },
 }
 </script>
 
@@ -73,24 +78,27 @@ export default {
 }
 
 .elder-checkbox {
-  $size: 1.5rem;
+  position: relative;
 
   display: flex;
   align-items: center;
+
   cursor: pointer;
 
-  position: relative;
+  $size: 1.5rem;
 
   input[type='checkbox'] {
-    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: none;
-    margin: 0;
 
     width: $size;
     height: $size;
+    margin: 0;
+
+    pointer-events: none;
+
+    opacity: 0;
 
     &:focus {
       & ~ .elder-checkbox__box {
@@ -100,33 +108,56 @@ export default {
 
     &:disabled {
       & ~ .elder-checkbox__box {
-        background-color: rgba(GetVariable('border-color'), 0.3);
-        color: rgba(inherit, 0.5);
+        color: inherit;
         border-color: GetVariable('border-color');
+
+        &:before {
+          opacity: 0.3;
+          background-color: GetVariable('border-color');
+        }
       }
 
       & ~ .elder-checkbox__label {
-        color: rgba(inherit, 0.5);
+        color: inherit;
       }
     }
   }
 
   &__box {
+    font-size: 0.6rem;
+
+    position: relative;
+
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
     justify-content: center;
 
-    height: $size;
     width: $size;
+    height: $size;
+    margin-right: 0.5rem;
+
+    color: white;
     border: 1px solid GetVariable('border-color');
     border-radius: GetVariable('border-radius');
 
-    margin-right: 0.5rem;
-    flex-shrink: 0;
+    & svg {
+      z-index: 1;
+    }
 
-    font-size: 0.6rem;
+    &:before {
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      left: 0;
 
-    color: white;
+      width: 100%;
+      height: 100%;
+
+      content: '';
+
+      opacity: 1;
+    }
   }
 
   &__label {
@@ -134,14 +165,19 @@ export default {
   }
 
   &__required {
-    color: GetVariable('error');
     margin-left: 4px;
+
+    color: GetVariable('error');
   }
 
   &--checked {
     .elder-checkbox__box {
       border-color: GetVariable('primary');
-      background-color: lighten(GetVariable('primary'), 10%);
+
+      &:before {
+        opacity: 0.9;
+        background-color: GetVariable('primary');
+      }
     }
   }
 }
