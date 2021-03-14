@@ -8,7 +8,7 @@
       v-bind="binding"
     />
     <span class="elder-checkbox__box">
-      <FontAwesomeIcon v-if="value" :icon="['fas', 'check']" />
+      <font-awesome-icon v-if="isChecked" :icon="['fas', 'check']" />
     </span>
     <span class="elder-checkbox__label">
       <slot>{{ label }}</slot>
