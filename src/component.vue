@@ -15,6 +15,9 @@
     <span class="elder-checkbox__label">
       <slot>{{ label }}</slot>
       <abbr v-if="binding.required" class="elder-checkbox__required">*</abbr>
+      <span class="elder-checkbox__sublabel" v-if="sublabel || $slots.sublabel">
+        <slot name="sublabel">{{ sublabel }}</slot>
+      </span>
     </span>
   </label>
 </template>
@@ -34,6 +37,7 @@ export default {
       },
     },
     label: String,
+    sublabel: String,
   },
   computed: {
     isChecked() {
@@ -88,7 +92,7 @@ $variables: (
   position: relative;
 
   display: flex;
-  align-items: center;
+  align-items: start;
 
   cursor: pointer;
 
@@ -169,6 +173,12 @@ $variables: (
 
   &__label {
     font-weight: 300;
+  }
+
+  &__sublabel {
+    opacity: 0.4;
+    display: block;
+    font-size: 0.9rem;
   }
 
   &__required {
