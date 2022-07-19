@@ -1,5 +1,11 @@
 <template>
-  <label class="elder-checkbox" :class="{ 'elder-checkbox--checked': isChecked }">
+  <label
+    class="elder-checkbox"
+    :class="{
+      'elder-checkbox--checked': isChecked,
+      'elder-checkbox--indeterminate': indeterminate,
+    }"
+  >
     <input
       type="checkbox"
       :value="state || value"
@@ -38,6 +44,10 @@ export default {
     },
     label: String,
     sublabel: String,
+    indeterminate: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     isChecked() {
@@ -111,7 +121,7 @@ $variables: (
 
     opacity: 0;
 
-    &:focus {
+    &:focus-visible {
       & ~ .elder-checkbox__box {
         border-color: GetVariable('primary') !important;
       }
@@ -194,6 +204,27 @@ $variables: (
       &:before {
         opacity: 0.9;
         background-color: GetVariable('primary');
+      }
+    }
+  }
+
+  &--indeterminate {
+    .elder-checkbox__box {
+      border-color: GetVariable('primary');
+
+      &:before {
+        opacity: 0.5;
+        background-color: GetVariable('primary');
+      }
+
+      &:after {
+        content: '—';
+        font-size: 1rem;
+        font-weight: bold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
   }
