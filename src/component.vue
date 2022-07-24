@@ -1,10 +1,13 @@
 <template>
   <label
     class="elder-checkbox"
-    :class="{
-      'elder-checkbox--checked': isChecked,
-      'elder-checkbox--indeterminate': indeterminate,
-    }"
+    :class="[
+      `elder-checkbox--theme-${theme}`,
+      {
+        'elder-checkbox--checked': isChecked,
+        'elder-checkbox--indeterminate': !isChecked && indeterminate,
+      },
+    ]"
   >
     <input
       type="checkbox"
@@ -15,7 +18,10 @@
     />
     <span class="elder-checkbox__box">
       <slot name="icon" :checked="isChecked">
-        <font-awesome-icon v-if="isChecked" :icon="['fas', 'check']" />
+        <font-awesome-icon
+          v-if="theme === 'default' && isChecked"
+          :icon="['fas', 'check']"
+        />
       </slot>
     </span>
     <span class="elder-checkbox__label">
@@ -44,6 +50,10 @@ export default {
     },
     label: String,
     sublabel: String,
+    theme: {
+      type: String,
+      default: 'default',
+    },
     indeterminate: {
       type: Boolean,
       default: false,
@@ -87,18 +97,49 @@ export default {
 </script>
 
 <style lang="scss">
-$variables: (
-  'primary': #3a9acd,
-  'error': #e83b35,
-  'border-radius': 3px,
-  'border-color': #eaeaea,
-);
+@function yiq-is-light($color, $threshold: 140) {
+  $red: red($color);
+  $green: green($color);
+  $blue: blue($color);
+
+  $yiq: (($red * 299)+ ($green * 587)+ ($blue * 114))/1000;
+
+  @return if($yiq >= $threshold, true, false);
+}
+
+@mixin generateHSL($key, $color, $contrast: false) {
+  --#{$key}-h: #{hue($color)};
+  --#{$key}-s: #{saturation($color)};
+  --#{$key}-l: #{lightness($color)};
+  --#{$key}: hsl(var(--#{$key}-h), var(--#{$key}-s), var(--#{$key}-l));
+
+  @if $contrast {
+    --#{$key}-contrast-h: #{hue($contrast)};
+    --#{$key}-contrast-s: #{saturation($contrast)};
+    --#{$key}-contrast-l: #{lightness($contrast)};
+    --#{$key}-contrast: hsl(var(--#{$key}-h), var(--#{$key}-s), var(--#{$key}-l));
+  } @else {
+    $lightness: if(yiq-is-light($color), 20%, 100%);
+
+    --#{$key}-contrast-h: #{hue($color)};
+    --#{$key}-contrast-s: #{saturation($color)};
+    --#{$key}-contrast-l: #{$lightness};
+    --#{$key}-contrast: hsl(
+      var(--#{$key}-contrast-h),
+      var(--#{$key}-contrast-s),
+      var(--#{$key}-contrast-l)
+    );
+  }
+}
 
 @function GetVariable($key) {
-  @return var(--vue-elder-#{$key}, map-get($variables, $key));
+  @return var(--#{$key}, --vue-elder-#{$key});
 }
 
 .elder-checkbox {
+  @include generateHSL('vue-elder-primary', #3a9acd);
+  $borderColor: #eaeaea;
+
   position: relative;
 
   display: flex;
@@ -106,41 +147,65 @@ $variables: (
 
   cursor: pointer;
 
-  $size: 1.5rem;
+  $size: 1.3rem;
+
+  outline: none;
+
+  &--checked {
+    &:not([disabled='disabled']) {
+      &.elder-checkbox--theme-default .elder-checkbox__box {
+        color: white;
+      }
+    }
+
+    &.elder-checkbox--theme-toggle {
+      .elder-checkbox__box {
+        &:before {
+          transform: translateX(calc(100% - 2px));
+        }
+
+        & > * {
+          transform: translateX(calc(100% - 2px));
+        }
+      }
+    }
+  }
+
+  &[disabled='disabled'] {
+    cursor: not-allowed;
+
+    .elder-checkbox__box {
+      color: inherit;
+      border-color: var(--border-color, $borderColor);
+      background-color: var(--border-color, $borderColor);
+    }
+
+    &.elder-checkbox--theme-toggle .elder-checkbox__box {
+      height: 1.5rem;
+
+      &:before {
+        background-color: rgba(black, 0.2);
+      }
+    }
+  }
 
   input[type='checkbox'] {
     position: absolute;
     top: 0;
     left: 0;
 
-    width: $size;
     height: $size;
+    aspect-ratio: 1;
     margin: 0;
 
     pointer-events: none;
 
     opacity: 0;
+  }
 
-    &:focus-visible {
-      & ~ .elder-checkbox__box {
-        border-color: GetVariable('primary') !important;
-      }
-    }
-
-    &:disabled {
-      & ~ .elder-checkbox__box {
-        color: inherit;
-        border-color: GetVariable('border-color');
-
-        &:before {
-          opacity: 0.3;
-          background-color: GetVariable('border-color');
-        }
-      }
-
-      & ~ .elder-checkbox__label {
-        color: inherit;
-      }
+  &:focus-visible {
+    .elder-checkbox__box {
+      outline: 2px solid GetVariable('primary');
     }
   }
 
@@ -154,30 +219,43 @@ $variables: (
     flex-shrink: 0;
     justify-content: center;
 
-    width: $size;
     height: $size;
+    aspect-ratio: 1;
     margin-right: 0.5rem;
 
-    color: white;
-    border: 1px solid GetVariable('border-color');
-    border-radius: GetVariable('border-radius');
+    border: 1px solid var(--border-color, $borderColor);
+    border-radius: var(--border-radius, 3px);
 
-    & svg {
-      z-index: 1;
-    }
+    transition: 100ms ease-out;
 
-    &:before {
-      position: absolute;
-      z-index: 0;
-      top: 0;
-      left: 0;
+    .elder-checkbox--theme-toggle & {
+      aspect-ratio: 5 / 3;
+      border-radius: $size;
+      height: 1.5rem;
+      background-color: var(--border-color, $borderColor);
 
-      width: 100%;
-      height: 100%;
+      & > * {
+        color: inherit;
+        transition: inherit;
+        transform: translateX(-0.5rem);
+      }
 
-      content: '';
+      &:before {
+        content: '';
+        display: block;
+        height: calc(1.5rem - 6px);
+        aspect-ratio: 1;
 
-      opacity: 1;
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        margin: 3px;
+
+        background-color: white;
+        border-radius: 50%;
+
+        transition: inherit;
+      }
     }
   }
 
@@ -194,37 +272,40 @@ $variables: (
   &__required {
     margin-left: 4px;
 
-    color: GetVariable('error');
+    color: var(--error, #e83b35);
   }
 
   &--checked {
     .elder-checkbox__box {
       border-color: GetVariable('primary');
-
-      &:before {
-        opacity: 0.9;
-        background-color: GetVariable('primary');
-      }
+      background-color: GetVariable('primary');
     }
   }
 
   &--indeterminate {
     .elder-checkbox__box {
-      border-color: GetVariable('primary');
-
-      &:before {
-        opacity: 0.5;
-        background-color: GetVariable('primary');
-      }
+      border-color: hsla(
+        GetVariable('primary-h'),
+        GetVariable('primary-s'),
+        GetVariable('primary-l'),
+        0.3
+      );
+      background-color: hsla(
+        GetVariable('primary-h'),
+        GetVariable('primary-s'),
+        GetVariable('primary-l'),
+        0.1
+      );
 
       &:after {
         content: '—';
-        font-size: 1rem;
+        font-size: 0.8rem;
         font-weight: bold;
         position: absolute;
+        color: GetVariable('primary');
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -52%);
       }
     }
   }
