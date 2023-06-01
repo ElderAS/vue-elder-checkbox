@@ -25,7 +25,9 @@
       </slot>
     </span>
     <span class="elder-checkbox__label">
-      <slot>{{ label }}</slot>
+      <slot>
+        <span v-html="label"></span>
+      </slot>
       <abbr v-if="binding.required" class="elder-checkbox__required">*</abbr>
       <span class="elder-checkbox__sublabel" v-if="sublabel || $slots.sublabel">
         <slot name="sublabel">{{ sublabel }}</slot>
