@@ -18,10 +18,7 @@
     />
     <span class="elder-checkbox__box">
       <slot name="icon" :checked="isChecked">
-        <font-awesome-icon
-          v-if="theme === 'default' && isChecked"
-          :icon="['fas', 'check']"
-        />
+        <Icon v-if="theme === 'default' && isChecked" :icon="['fas', 'check']" />
       </slot>
     </span>
     <span class="elder-checkbox__label">
@@ -38,7 +35,7 @@
 
 <script>
 import { AttributeBoolean } from './utils'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Icon from '@kvass/vue2-icon'
 
 export default {
   props: {
@@ -93,7 +90,7 @@ export default {
     },
   },
   components: {
-    FontAwesomeIcon,
+    Icon,
   },
 }
 </script>
