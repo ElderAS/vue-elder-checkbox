@@ -7,11 +7,10 @@
     "cz-conventional-changelog": "^3.3.0",
     "semantic-release": "^17.3.0",
     "semantic-release-cli": "^5.4.0",
-    "dotenv-cli": "^4.0.0"
   },
   "scripts": {
     "test": "echo \"No tests yet\"",
-    "semantic-release": "dotenv semantic-release"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",

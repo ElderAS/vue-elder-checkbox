@@ -40,7 +40,7 @@ import Icon from '@kvass/vue2-icon'
 export default {
   props: {
     value: [Boolean, Array],
-    state: [String, Object],
+    state: [String, Object, Boolean],
     compare: {
       type: Function,
       default(a, b) {
@@ -60,8 +60,7 @@ export default {
   },
   computed: {
     isChecked() {
-      if (this.isArray)
-        return this.value.find((x) => this.compare(x, this.state)) ? true : false
+      if (this.isArray) return this.value.some((x) => this.compare(x, this.state))
       return this.value
     },
     isArray() {
